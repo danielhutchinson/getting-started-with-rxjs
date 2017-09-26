@@ -1,13 +1,23 @@
-import { Observable, Observer } from 'rxjs'
+import { Observable } from 'rxjs'
 
 let numbers = [1,5,10]
-let source = Observable.from(numbers)
+let source = Observable.create((observer) => {
+
+    for(let n of numbers) {
+
+        // if(n === 5) {
+        //     observer.error('something has gone wrong')
+        // }
+
+        observer.next(n)
+    }
+
+    observer.complete()
+
+})
 
 source.subscribe(
-    // next
     nextValue => console.log(`nextValue: ${nextValue}`),
-    // error
     error => console.log(`error: ${error}`),
-    // complete
     () => console.log('complete')
 )

@@ -6,8 +6,10 @@ let button = document.getElementById('button')
 let click = Observable.fromEvent(button, 'click')
 
 function load(url: string): Observable<any> {
-    let promise = fetch(url).then(response => response.json())
-    return Observable.fromPromise(promise)
+    return Observable.defer(() => {
+        let promise = fetch(url).then(response => response.json())
+        return Observable.fromPromise(promise)
+    })
 }
 
 function renderMovies(movies): void {

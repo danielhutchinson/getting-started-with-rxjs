@@ -1,18 +1,20 @@
 import { Observable } from 'rxjs'
 
-let numbers = [1,5,10]
+let numbers = [1, 5, 10]
 let source = Observable.create((observer) => {
+    let index = 0;
+    let produceValue = () => {
+        observer.next(numbers[index++])
 
-    for(let n of numbers) {
-
-        // if(n === 5) {
-        //     observer.error('something has gone wrong')
-        // }
-
-        observer.next(n)
+        if (index < numbers.length) {
+            setTimeout(produceValue, 1000)
+        }
+        else {
+            observer.complete()
+        }
     }
 
-    observer.complete()
+    produceValue()
 
 })
 

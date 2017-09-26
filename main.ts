@@ -5,7 +5,7 @@ let button = document.getElementById('button')
 
 let click = Observable.fromEvent(button, 'click')
 
-function load(url: string) {
+function load(url: string) : Observable<any> {
     return Observable.create(observer => {
         let xhr = new XMLHttpRequest()
 
@@ -20,7 +20,7 @@ function load(url: string) {
     })
 }
 
-function renderMovies(movies) {
+function renderMovies(movies) : void {
     movies.forEach(movie => {
         let div = document.createElement('div')
         div.innerText = movie.title
@@ -28,5 +28,10 @@ function renderMovies(movies) {
     });
 }
 
+
+// flat map is a more sophisticated version of map
+// it will automatically subscribe to any observables
+// that are passed to it. In this case the observable
+// returned by load
 click.flatMap(event => load('movies.json'))
     .subscribe(movies => renderMovies(movies))

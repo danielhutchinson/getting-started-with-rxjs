@@ -6,23 +6,8 @@ let button = document.getElementById('button')
 let click = Observable.fromEvent(button, 'click')
 
 function load(url: string): Observable<any> {
-    return Observable.create(observer => {
-        let xhr = new XMLHttpRequest()
-
-        xhr.addEventListener('load', () => {
-            if (xhr.status === 200) {
-                let data = JSON.parse(xhr.responseText)
-                observer.next(data)
-                observer.complete()
-            }
-            else {
-                observer.error(xhr.statusText)
-            }
-        })
-
-        xhr.open('GET', url)
-        xhr.send()
-    }).retry(3)
+    let promise = fetch(url).then(response => response.json())
+    return Observable.fromPromise(promise)
 }
 
 function renderMovies(movies): void {
@@ -33,7 +18,7 @@ function renderMovies(movies): void {
     });
 }
 
-click.flatMap(event => load('moviess.json'))
+click.flatMap(event => load('movies.json'))
     .subscribe(
     movies => renderMovies(movies),
     error => console.log(error)
